@@ -13,7 +13,7 @@ export class PodcastRepository extends Repository<Podcast> {
 
         if (search) {
             query.andWhere(
-                'LOWER(task.title) LIKE LOWER(:search) OR LOWER(task.description) LIKE LOWER(:search)',
+                'LOWER(podcast.title) LIKE LOWER(:search) OR LOWER(podcast.description) LIKE LOWER(:search)',
                 { search: `%${search}%`},
             );
         }

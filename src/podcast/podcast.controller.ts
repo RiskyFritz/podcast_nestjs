@@ -3,8 +3,8 @@ import { PodcastService } from './podcast.service';
 import { Podcast } from './podcast.entity';
 import { CreatePodcastDto } from './dto/create-podcast.dto';
 import { GetPodcastFilterDto } from './dto/get-podcast-filter.dto';
-import Parser from 'rss-parser';
-// const Parser = require('rss-parser');
+// import Parser from 'rss-parser';
+const Parser = require('rss-parser');
 
 @Controller('podcast')
 export class PodcastController {
@@ -37,13 +37,17 @@ export class PodcastController {
           imageTitle: string,
           title: string;
         // set podcast info
-        description = json.description;
-        imageLink = json.image.link;
-        imageUrl = json.image.url;
-        imageTitle = json.image.title;
-        title = json.title;
+        const podcastObject = {
+        description: json.description,
+        imageLink: json.image.link,
+        imageUrl: json.image.url,
+        imageTitle: json.image.title,
+        title: json.title,
+        }
         // find db item info
 
+        // zbd createpodcast({pass in object})
+        this.PodcastService.createPodcast(podcastObject);
         // check if new items are available
 
         // add all new items that are valid
@@ -55,8 +59,6 @@ export class PodcastController {
         console.error(err);
       }
     };
-    this.createPodcast;
-
     parse();
   }
 
