@@ -31,26 +31,26 @@ export class EpisodesController {
         // get rss json object from url
         const feed = await parser.parseURL(url);
         // find podcast info
-        feed.items.forEach(item => {
+        feed.items.forEach((item) => {
           let description: string,
-          audioUrl: string,
-          pubDate: string,
-          duration: string,
-          title: string;
+            audioUrl: string,
+            pubDate: string,
+            duration: string,
+            title: string;
           const episodeObject = {
             description: item.itunes.subtitle,
             audioUrl: item.link,
             pubDate: String(item.pubDate),
             duration: String(item.itunes.duration),
             title: item.title,
-          }
+          };
           try {
             this.EpisodesService.createEpisode(episodeObject);
             return item.title;
-          } catch(err) {
+          } catch (err) {
             console.error(err);
           }
-        })
+        });
         // check if new items are available
 
         // add all new items that are valid
@@ -66,10 +66,10 @@ export class EpisodesController {
     parse();
   }
 
-    
-
   @Post()
-  createEpisode(@Body() CreateEpisodesDto: CreateEpisodesDto): Promise<Episodes> {
+  createEpisode(
+    @Body() CreateEpisodesDto: CreateEpisodesDto,
+  ): Promise<Episodes> {
     return this.EpisodesService.createEpisode(CreateEpisodesDto);
   }
 }
