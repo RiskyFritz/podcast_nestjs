@@ -8,6 +8,7 @@ const Parser = require('rss-parser');
 
 @Controller('episodes')
 export class EpisodesController {
+  
   constructor(private EpisodesService: EpisodesService) {}
 
   @Get()
@@ -16,8 +17,8 @@ export class EpisodesController {
   }
 
   @Get('/:id')
-  getEpisodeById(@Param('id') id: string): Promise<Episodes> {
-    return this.EpisodesService.getEpisodeById(id);
+  getEpisodeByTitle(@Param('title') title: string): Promise<Episodes> {
+    return this.EpisodesService.getEpisodeByTitle(title);
   }
 
   @Post('/rss')
@@ -38,12 +39,13 @@ export class EpisodesController {
           duration: string,
           title: string;
           const episodeObject = {
-            description: item.itunes.subtitle,
+            description: item.content.replace(/<script[^>]*>([\S\s]*?)<\/script>/g, ''),
             audioUrl: item.link,
             pubDate: String(item.pubDate),
             duration: String(item.itunes.duration),
             title: item.title,
           }
+          
           try {
             this.EpisodesService.createEpisode(episodeObject);
             return item.title;

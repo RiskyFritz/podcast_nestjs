@@ -16,10 +16,10 @@ export class EpisodesService {
         return this.EpisodesRepository.getEpisodes(filterDto);
       }
     
-      async getEpisodeById(id: string): Promise<Episodes> {
-        const found = await this.EpisodesRepository.findOne(id);
+      async getEpisodeByTitle(title: string): Promise<Episodes> {
+        const found = await this.EpisodesRepository.findOne(title);
         if (!found) {
-          throw new NotFoundException(`Task with ID "${id}" not found`);
+          throw new NotFoundException(`Episode with title "${title}" not found`);
         }
     
         return found;
