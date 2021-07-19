@@ -3,8 +3,9 @@ import { CreateEpisodesDto } from './dto/create-episodes.dto'
 import { GetEpisodesFilterDto } from './dto/get-episodes-filter.dto'
 import { RSSEpisodeRepository, RSSPodcastRepository } from './rss.repository'
 import { InjectRepository } from '@nestjs/typeorm'
-import { Episode, Podcast } from './rss.entity'
 import { CreatePodcastDto } from './dto/create-podcast.dto'
+import { Episode } from 'src/episode/episode.entity'
+import { Podcast } from 'src/podcast/podcast.entity'
 
 @Injectable()
 export class RSSService {

@@ -1,8 +1,9 @@
 /* eslint-disable prettier/prettier */
 import { EntityRepository, Repository } from 'typeorm'
 import { CreateEpisodesDto } from './dto/create-episodes.dto'
-import { Episode, Podcast } from './rss.entity'
 import { CreatePodcastDto } from 'src/podcast/dto/create-podcast.dto'
+import { Episode } from 'src/episode/episode.entity'
+import { Podcast } from 'src/podcast/podcast.entity'
 
 @EntityRepository(Episode)
 export class RSSEpisodeRepository extends Repository<Episode> {

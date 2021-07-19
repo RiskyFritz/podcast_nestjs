@@ -1,8 +1,5 @@
 import { Body, Controller, Get, Param, Post, Query } from '@nestjs/common'
 import { RSSService } from './rss.service'
-import { Episode } from './rss.entity'
-import { CreateEpisodesDto } from './dto/create-episodes.dto'
-import { GetEpisodesFilterDto } from './dto/get-episodes-filter.dto'
 //import Parser from 'rss-parser';
 const Parser = require('rss-parser')
 
@@ -91,15 +88,4 @@ export class RSSController {
 
         return
     }
-
-    // Should not be open to the public
-    @Post()
-    createEpisode(
-        @Body() CreateEpisodesDto: CreateEpisodesDto,
-    ): Promise<Episode> {
-        return this.RSSService.createEpisode(CreateEpisodesDto)
-    }
-}
-function getEpisodeById() {
-    throw new Error('Function not implemented.')
 }
