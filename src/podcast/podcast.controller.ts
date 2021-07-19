@@ -70,6 +70,3 @@ export class PodcastController {
         return this.PodcastService.createPodcast(CreatePodcastDto)
     }
 }
-function getPodcastById() {
-    throw new Error('Function not implemented.')
-}

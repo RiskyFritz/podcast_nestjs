@@ -5,6 +5,6 @@ import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 export class RSSUrl {
   @PrimaryGeneratedColumn('uuid')
   id: string;
-  @Column()
+  @Column({ unique: true })
   feed_url: string;
 }

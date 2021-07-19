@@ -7,13 +7,24 @@ const Parser = require('rss-parser')
 export class RSSController {
     constructor(private RSSService: RSSService) {}
 
+    @Post('feedurl')
+    async createRSS(@Body('url') url: string) {
+        console.log(url)
+        if (!url) return
+        try {
+            const feed = await this.RSSService.createRSSUrl({ feed_url: url })
+            return feed
+        } catch (err) {
+            console.error(err)
+        }
+    }
+
     @Post()
     async parseRSS() {
         const parser = new Parser()
-        // get all rss feed string from db
-        let urls = ['https://feed.syntax.fm/rss'] // MOCK DATA
 
         const parse = async (url) => {
+            console.log(`FEED URL: ${url}`)
             try {
                 // get rss json object from url
                 const feed = await parser.parseURL(url)
@@ -77,6 +88,12 @@ export class RSSController {
             }
         }
 
+        // get all rss feed string from db
+        let urls = await (await this.RSSService.getAllRSSUrls()).map((item) => {
+            return item.feed_url
+        })
+        console.log(`ALL FEED URLS:`, urls)
+        if (urls.length === 0) return
         // iterate through urls and parse
         for (let url of urls) {
             try {
@@ -85,7 +102,5 @@ export class RSSController {
                 console.error(err)
             }
         }
-
-        return
     }
 }

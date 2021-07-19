@@ -4,6 +4,8 @@ import { CreateEpisodesDto } from './dto/create-episodes.dto'
 import { CreatePodcastDto } from 'src/podcast/dto/create-podcast.dto'
 import { Episode } from 'src/episode/episode.entity'
 import { Podcast } from 'src/podcast/podcast.entity'
+import { RSSUrl } from './rss.entity'
+import { CreateRSSUrlDto } from './dto/create-rss-url.dto'
 
 @EntityRepository(Episode)
 export class RSSEpisodeRepository extends Repository<Episode> {
@@ -58,5 +60,23 @@ export class RSSPodcastRepository extends Repository<Podcast> {
             return query
         }
         return null
+    }
+}
+
+@EntityRepository(RSSUrl)
+export class RSSUrlRepository extends Repository<RSSUrl> {
+    async createRSSUrl(createRSSUrlDto: CreateRSSUrlDto): Promise<RSSUrl> {
+        const rssUrl = this.create(createRSSUrlDto)
+
+        await this.save(rssUrl)
+        return rssUrl
+    }
+
+    async getAllRSSUrls(): Promise<RSSUrl[]> {
+        const query = await this.createQueryBuilder('rss_urls').getMany()
+        if (query) {
+            return query
+        }
+        return []
     }
 }
