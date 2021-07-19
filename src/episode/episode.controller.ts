@@ -1,22 +1,22 @@
 import { Body, Controller, Get, Param, Post, Query } from '@nestjs/common'
-import { EpisodesService } from './episodes.service'
-import { Episodes } from './episodes.entity'
-import { CreateEpisodesDto } from './dto/create-episodes.dto'
+import { EpisodesService } from './episode.service'
+import { Episode } from './episode.entity'
+import { CreateEpisodesDto } from './dto/create-episode.dto'
 import { GetEpisodesFilterDto } from './dto/get-episodes-filter.dto'
 //import Parser from 'rss-parser';
 const Parser = require('rss-parser')
 
-@Controller('episodes')
+@Controller('episode')
 export class EpisodesController {
     constructor(private EpisodesService: EpisodesService) {}
 
     @Get()
-    getEpisodes(@Query() filterDto: GetEpisodesFilterDto): Promise<Episodes[]> {
+    getEpisodes(@Query() filterDto: GetEpisodesFilterDto): Promise<Episode[]> {
         return this.EpisodesService.getEpisodes(filterDto)
     }
 
     @Get('/:id')
-    getEpisodeById(@Param('id') id: string): Promise<Episodes> {
+    getEpisodeById(@Param('id') id: string): Promise<Episode> {
         return this.EpisodesService.getEpisodeById(id)
     }
 
@@ -82,7 +82,7 @@ export class EpisodesController {
     @Post()
     createEpisode(
         @Body() CreateEpisodesDto: CreateEpisodesDto,
-    ): Promise<Episodes> {
+    ): Promise<Episode> {
         return this.EpisodesService.createEpisode(CreateEpisodesDto)
     }
 }

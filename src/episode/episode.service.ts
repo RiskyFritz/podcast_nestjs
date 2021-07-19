@@ -1,9 +1,9 @@
 import { Injectable, NotFoundException } from '@nestjs/common'
-import { CreateEpisodesDto } from './dto/create-episodes.dto'
+import { CreateEpisodesDto } from './dto/create-episode.dto'
 import { GetEpisodesFilterDto } from './dto/get-episodes-filter.dto'
-import { EpisodesRepository } from './episodes.repository'
+import { EpisodesRepository } from './episode.repository'
 import { InjectRepository } from '@nestjs/typeorm'
-import { Episodes } from './episodes.entity'
+import { Episode } from './episode.entity'
 
 @Injectable()
 export class EpisodesService {
@@ -12,11 +12,11 @@ export class EpisodesService {
         private EpisodesRepository: EpisodesRepository,
     ) {}
 
-    getEpisodes(filterDto: GetEpisodesFilterDto): Promise<Episodes[]> {
+    getEpisodes(filterDto: GetEpisodesFilterDto): Promise<Episode[]> {
         return this.EpisodesRepository.getEpisodes(filterDto)
     }
 
-    async getEpisodeById(id: string): Promise<Episodes> {
+    async getEpisodeById(id: string): Promise<Episode> {
         const found = await this.EpisodesRepository.findOne(id)
         if (!found) {
             throw new NotFoundException(`Task with ID "${id}" not found`)
@@ -25,11 +25,11 @@ export class EpisodesService {
         return found
     }
 
-    createEpisode(CreateEpisodesDto: CreateEpisodesDto): Promise<Episodes> {
+    createEpisode(CreateEpisodesDto: CreateEpisodesDto): Promise<Episode> {
         return this.EpisodesRepository.createEpisode(CreateEpisodesDto)
     }
 
-    async getMostRecentEpisode(): Promise<Episodes> {
+    async getMostRecentEpisode(): Promise<Episode> {
         const mostRecent = await this.EpisodesRepository.getMostRecentEpisode()
 
         return mostRecent

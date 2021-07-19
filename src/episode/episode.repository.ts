@@ -1,19 +1,19 @@
 /* eslint-disable prettier/prettier */
 import { EntityRepository, Repository } from 'typeorm'
-import { CreateEpisodesDto } from './dto/create-episodes.dto'
-import { Episodes } from './episodes.entity'
+import { CreateEpisodesDto } from './dto/create-episode.dto'
+import { Episode } from './episode.entity'
 import { GetEpisodesFilterDto } from './dto/get-episodes-filter.dto'
 
-@EntityRepository(Episodes)
-export class EpisodesRepository extends Repository<Episodes> {
-    async getEpisodes(episodesDto: GetEpisodesFilterDto): Promise<Episodes[]> {
+@EntityRepository(Episode)
+export class EpisodesRepository extends Repository<Episode> {
+    async getEpisodes(episodesDto: GetEpisodesFilterDto): Promise<Episode[]> {
         const { search } = episodesDto
 
-        const query = this.createQueryBuilder('episodes')
+        const query = this.createQueryBuilder('episode')
 
         if (search) {
             query.andWhere(
-                'LOWER(episodes.title) LIKE LOWER(:search) OR LOWER(episodes.description) LIKE LOWER(:search)',
+                'LOWER(episode.title) LIKE LOWER(:search) OR LOWER(episode.description) LIKE LOWER(:search)',
                 { search: `%${search}%` },
             )
         }
@@ -22,7 +22,7 @@ export class EpisodesRepository extends Repository<Episodes> {
     }
     async createEpisode(
         createEpisodesDto: CreateEpisodesDto,
-    ): Promise<Episodes> {
+    ): Promise<Episode> {
         const {
             title,
             description,
@@ -43,10 +43,10 @@ export class EpisodesRepository extends Repository<Episodes> {
         return episode
     }
 
-    async getMostRecentEpisode(): Promise<Episodes> {
+    async getMostRecentEpisode(): Promise<Episode> {
         // get the most recently created episode
         // the date will likely need to be put into the db as a date type so we can be confident in the return of this function
-        const query = await this.createQueryBuilder('episodes').getOne()
+        const query = await this.createQueryBuilder('episode').getOne()
         if (query) {
             return query
         }
