@@ -1,38 +1,29 @@
 import { Body, Controller, Get, Param, Post, Query } from '@nestjs/common'
-import { EpisodesService } from './episodes.service'
-import { Episodes } from './episodes.entity'
+import { RSSService } from './rss.service'
+import { RSS } from './rss.entity'
 import { CreateEpisodesDto } from './dto/create-episodes.dto'
 import { GetEpisodesFilterDto } from './dto/get-episodes-filter.dto'
 //import Parser from 'rss-parser';
 const Parser = require('rss-parser')
 
-@Controller('episodes')
-export class EpisodesController {
-    constructor(private EpisodesService: EpisodesService) {}
+@Controller('rss')
+export class RSSController {
+    constructor(private RSSService: RSSService) {}
 
-    @Get()
-    getEpisodes(@Query() filterDto: GetEpisodesFilterDto): Promise<Episodes[]> {
-        return this.EpisodesService.getEpisodes(filterDto)
-    }
-
-    @Get('/:id')
-    getEpisodeById(@Param('id') id: string): Promise<Episodes> {
-        return this.EpisodesService.getEpisodeById(id)
-    }
-
-    @Post('/rss')
-    parseRSS() {
+    @Post()
+    async parseRSS() {
         const parser = new Parser()
         // get all rss feed string from db
-        let url = 'https://feed.syntax.fm/rss' // MOCK DATA
+        let urls = ['https://feed.syntax.fm/rss'] // MOCK DATA
 
-        const parse = async () => {
+        const parse = async (url) => {
             try {
                 // get rss json object from url
                 const feed = await parser.parseURL(url)
                 console.log(`PRE FILTER LENGTH: ${feed.items.length}`)
+                console.log(feed.feedUrl)
                 // get the most recent podcast episode
-                const mostRecentEpisode = await this.EpisodesService.getMostRecentEpisode()
+                const mostRecentEpisode = await this.RSSService.getMostRecentEpisode()
                 console.log(
                     `${mostRecentEpisode?.title ?? 'EMPTY'} - ${
                         mostRecentEpisode?.pubDate ?? 'EMPTY'
@@ -40,12 +31,11 @@ export class EpisodesController {
                 )
                 // if the most recent episode exists filter out all episodes older than it
                 if (mostRecentEpisode) {
-                    feed.items = feed.items.filter((item) => {
-                        return (
+                    feed.items = feed.items.filter(
+                        (item) =>
                             new Date(item.pubDate) >
-                            new Date(mostRecentEpisode.pubDate)
-                        )
-                    })
+                            new Date(mostRecentEpisode.pubDate),
+                    )
                 }
                 console.log(`POST FILTER LENGTH: ${feed.items.length}`)
                 // filter through items if they are not already in the database
@@ -62,7 +52,7 @@ export class EpisodesController {
                         }
                         try {
                             // set new item info
-                            this.EpisodesService.createEpisode(episodeObject)
+                            this.RSSService.createEpisode(episodeObject)
                             return
                         } catch (err) {
                             console.error(err)
@@ -75,15 +65,22 @@ export class EpisodesController {
             }
         }
 
-        parse()
+        // iterate through urls and parse
+        for (let url of urls) {
+            try {
+                await parse(url)
+            } catch (err) {
+                console.error(err)
+            }
+        }
+
+        return
     }
 
     // Should not be open to the public
     @Post()
-    createEpisode(
-        @Body() CreateEpisodesDto: CreateEpisodesDto,
-    ): Promise<Episodes> {
-        return this.EpisodesService.createEpisode(CreateEpisodesDto)
+    createEpisode(@Body() CreateEpisodesDto: CreateEpisodesDto): Promise<RSS> {
+        return this.RSSService.createEpisode(CreateEpisodesDto)
     }
 }
 function getEpisodeById() {
