@@ -30,11 +30,14 @@ export class EpisodesController {
             try {
                 // get rss json object from url
                 const feed = await parser.parseURL(url)
-                console.log(`PRE FILTER: ${feed.items.length}`)
+                console.log(`PRE FILTER LENGTH: ${feed.items.length}`)
                 // get the most recent podcast episode
                 const mostRecentEpisode = await this.EpisodesService.getMostRecentEpisode()
-                console.log(mostRecentEpisode?.title)
-                console.log(mostRecentEpisode?.pubDate)
+                console.log(
+                    `${mostRecentEpisode?.title ?? 'EMPTY'} - ${
+                        mostRecentEpisode?.pubDate ?? 'EMPTY'
+                    }`,
+                )
                 // if the most recent episode exists filter out all episodes older than it
                 if (mostRecentEpisode) {
                     feed.items = feed.items.filter((item) => {
@@ -44,15 +47,12 @@ export class EpisodesController {
                         )
                     })
                 }
-                console.log(`POST FILTER: ${feed.items.length}`)
+                console.log(`POST FILTER LENGTH: ${feed.items.length}`)
+                // filter through items if they are not already in the database
                 if (feed.items.length > 0) {
                     // find podcast info
                     feed.items.forEach((item) => {
-                        let description: string,
-                            audioUrl: string,
-                            pubDate: string,
-                            duration: string,
-                            title: string
+                        // create new item info
                         const episodeObject = {
                             description: item.content,
                             audioUrl: item.link,
@@ -61,19 +61,14 @@ export class EpisodesController {
                             title: item.title,
                         }
                         try {
+                            // set new item info
                             this.EpisodesService.createEpisode(episodeObject)
-                            return item.title
+                            return
                         } catch (err) {
                             console.error(err)
                         }
                     })
                 }
-                // check if new items are available
-
-                // add all new items that are valid
-                // create new item info
-                // set new item info
-                // return dom node
                 return feed
             } catch (err) {
                 console.error(err)
