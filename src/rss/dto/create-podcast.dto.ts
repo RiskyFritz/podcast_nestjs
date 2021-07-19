@@ -9,15 +9,15 @@ export class CreatePodcastDto {
   description: string;
 
   @IsNotEmpty()
-  imageLink: string;
+  image_link: string;
 
   @IsNotEmpty()
-  imageUrl: string;
+  image_url: string;
 
   @IsNotEmpty()
-  imageTitle: string;
+  image_title: string;
 
   @IsNotEmpty()
-  feedUrl: string;
+  feed_url: string;
 }
 

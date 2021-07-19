@@ -10,9 +10,11 @@ export class Podcast {
   @Column()
   description: string;
   @Column()
-  imageTitle: string;
+  image_title: string;
   @Column()
-  imageUrl: string;
+  image_url: string;
   @Column()
-  imageLink: string;
+  image_link: string;
+  @Column()
+  feed_url: string;
 }

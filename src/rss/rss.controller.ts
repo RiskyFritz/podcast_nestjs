@@ -1,6 +1,6 @@
 import { Body, Controller, Get, Param, Post, Query } from '@nestjs/common'
 import { RSSService } from './rss.service'
-import { RSS } from './rss.entity'
+import { Episode } from './rss.entity'
 import { CreateEpisodesDto } from './dto/create-episodes.dto'
 import { GetEpisodesFilterDto } from './dto/get-episodes-filter.dto'
 //import Parser from 'rss-parser';
@@ -20,6 +20,21 @@ export class RSSController {
             try {
                 // get rss json object from url
                 const feed = await parser.parseURL(url)
+                // get podcast by feed url
+                const podcast = await this.RSSService.getPodcastByFeedUrl(url)
+                // if podcast does not exist then create it
+                if (!podcast) {
+                    console.log(`CREATE NEW PODCAST: ${url}`)
+                    const podcastObj = {
+                        title: feed.title,
+                        description: feed.description,
+                        image_link: feed.image.link,
+                        image_url: feed.image.url,
+                        image_title: feed.image.title,
+                        feed_url: feed.feedUrl,
+                    }
+                    await this.RSSService.createPodcast(podcastObj)
+                }
                 console.log(`PRE FILTER LENGTH: ${feed.items.length}`)
                 console.log(feed.feedUrl)
                 // get the most recent podcast episode
@@ -79,7 +94,9 @@ export class RSSController {
 
     // Should not be open to the public
     @Post()
-    createEpisode(@Body() CreateEpisodesDto: CreateEpisodesDto): Promise<RSS> {
+    createEpisode(
+        @Body() CreateEpisodesDto: CreateEpisodesDto,
+    ): Promise<Episode> {
         return this.RSSService.createEpisode(CreateEpisodesDto)
     }
 }

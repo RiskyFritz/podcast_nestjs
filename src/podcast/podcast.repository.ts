@@ -20,21 +20,7 @@ export class PodcastRepository extends Repository<Podcast> {
         return podcasts
     }
     async createPodcast(createPodcastDto: CreatePodcastDto): Promise<Podcast> {
-        const {
-            title,
-            description,
-            imageLink,
-            imageUrl,
-            imageTitle,
-        } = createPodcastDto
-
-        const podcast = this.create({
-            title,
-            description,
-            imageLink,
-            imageUrl,
-            imageTitle,
-        })
+        const podcast = this.create(createPodcastDto)
 
         await this.save(podcast)
         return podcast

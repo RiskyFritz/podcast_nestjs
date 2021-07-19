@@ -38,15 +38,16 @@ export class PodcastController {
                     title: string
                 // set podcast info
                 const podcastObject = {
-                    description: json.description,
-                    imageLink: json.image.link,
-                    imageUrl: json.image.url,
-                    imageTitle: json.image.title,
-                    title: json.title,
+                    title: json.description,
+                    description: json.image.link,
+                    image_link: json.image.url,
+                    image_url: json.image.title,
+                    image_title: json.title,
+                    feed_url: json.feedUrl,
                 }
                 // find db item info
 
-                // zbd createpodcast({pass in object})
+                // zbd create podcast({pass in object})
                 this.PodcastService.createPodcast(podcastObject)
                 // check if new items are available
 
