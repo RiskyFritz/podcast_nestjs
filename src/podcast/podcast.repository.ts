@@ -1,7 +1,7 @@
 import { EntityRepository, Repository } from 'typeorm'
-import { CreatePodcastDto } from './dto/create-podcast.dto'
 import { Podcast } from './podcast.entity'
 import { GetPodcastFilterDto } from './dto/get-podcast-filter.dto'
+import { CreatePodcastDto } from 'src/rss/dto/create-podcast.dto'
 
 @EntityRepository(Podcast)
 export class PodcastRepository extends Repository<Podcast> {

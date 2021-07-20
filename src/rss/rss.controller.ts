@@ -29,9 +29,10 @@ export class RSSController {
                 // get rss json object from url
                 const feed = await parser.parseURL(url)
                 // get podcast by feed url
-                const podcast = await this.RSSService.getPodcastByFeedUrl(url)
+                let podcast = await this.RSSService.getPodcastByFeedUrl(url)
                 // if podcast does not exist then create it
                 if (!podcast) {
+                    console.log(Object.keys(feed))
                     console.log(`CREATE NEW PODCAST: ${url}`)
                     const podcastObj = {
                         title: feed.title,
@@ -40,24 +41,19 @@ export class RSSController {
                         image_url: feed.image.url,
                         image_title: feed.image.title,
                         feed_url: feed.feedUrl,
+                        last_build_date: feed.lastBuildDate,
                     }
-                    await this.RSSService.createPodcast(podcastObj)
+                    podcast = await this.RSSService.createPodcast(podcastObj)
                 }
                 console.log(`PRE FILTER LENGTH: ${feed.items.length}`)
                 console.log(feed.feedUrl)
                 // get the most recent podcast episode
-                const mostRecentEpisode = await this.RSSService.getMostRecentEpisode()
-                console.log(
-                    `${mostRecentEpisode?.title ?? 'EMPTY'} - ${
-                        mostRecentEpisode?.pubDate ?? 'EMPTY'
-                    }`,
-                )
+                const lastBuildDate = podcast.last_build_date
                 // if the most recent episode exists filter out all episodes older than it
-                if (mostRecentEpisode) {
+                if (lastBuildDate) {
                     feed.items = feed.items.filter(
                         (item) =>
-                            new Date(item.pubDate) >
-                            new Date(mostRecentEpisode.pubDate),
+                            new Date(item.pubDate) > new Date(lastBuildDate),
                     )
                 }
                 console.log(`POST FILTER LENGTH: ${feed.items.length}`)
@@ -68,10 +64,11 @@ export class RSSController {
                         // create new item info
                         const episodeObject = {
                             description: item.content,
-                            audioUrl: item.link,
-                            pubDate: String(item.pubDate),
+                            audio_url: item.link,
+                            pub_date: String(item.pubDate),
                             duration: String(item.itunes.duration),
                             title: item.title,
+                            podcast_id: podcast.id,
                         }
                         try {
                             // set new item info

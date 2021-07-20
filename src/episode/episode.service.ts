@@ -1,5 +1,4 @@
 import { Injectable, NotFoundException } from '@nestjs/common'
-import { CreateEpisodesDto } from './dto/create-episode.dto'
 import { GetEpisodesFilterDto } from './dto/get-episodes-filter.dto'
 import { EpisodesRepository } from './episode.repository'
 import { InjectRepository } from '@nestjs/typeorm'
@@ -23,10 +22,6 @@ export class EpisodesService {
         }
 
         return found
-    }
-
-    createEpisode(CreateEpisodesDto: CreateEpisodesDto): Promise<Episode> {
-        return this.EpisodesRepository.createEpisode(CreateEpisodesDto)
     }
 
     async getMostRecentEpisode(): Promise<Episode> {

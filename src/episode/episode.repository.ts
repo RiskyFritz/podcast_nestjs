@@ -1,6 +1,5 @@
 /* eslint-disable prettier/prettier */
 import { EntityRepository, Repository } from 'typeorm'
-import { CreateEpisodesDto } from './dto/create-episode.dto'
 import { Episode } from './episode.entity'
 import { GetEpisodesFilterDto } from './dto/get-episodes-filter.dto'
 
@@ -19,28 +18,6 @@ export class EpisodesRepository extends Repository<Episode> {
         }
         const episodes = await query.getMany()
         return episodes
-    }
-    async createEpisode(
-        createEpisodesDto: CreateEpisodesDto,
-    ): Promise<Episode> {
-        const {
-            title,
-            description,
-            audioUrl,
-            pubDate,
-            duration,
-        } = createEpisodesDto
-
-        const episode = this.create({
-            title,
-            description,
-            audioUrl,
-            pubDate,
-            duration,
-        })
-
-        await this.save(episode)
-        return episode
     }
 
     async getMostRecentEpisode(): Promise<Episode> {

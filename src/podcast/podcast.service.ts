@@ -1,9 +1,9 @@
 import { Injectable, NotFoundException } from '@nestjs/common'
-import { CreatePodcastDto } from './dto/create-podcast.dto'
 import { GetPodcastFilterDto } from './dto/get-podcast-filter.dto'
 import { PodcastRepository } from './podcast.repository'
 import { InjectRepository } from '@nestjs/typeorm'
 import { Podcast } from './podcast.entity'
+import { CreatePodcastDto } from 'src/rss/dto/create-podcast.dto'
 
 @Injectable()
 export class PodcastService {

@@ -1,6 +1,5 @@
 import { Injectable, NotFoundException } from '@nestjs/common'
 import { CreateEpisodesDto } from './dto/create-episodes.dto'
-import { GetEpisodesFilterDto } from './dto/get-episodes-filter.dto'
 import {
     RSSEpisodeRepository,
     RSSPodcastRepository,
@@ -26,10 +25,6 @@ export class RSSService {
 
     createEpisode(CreateEpisodesDto: CreateEpisodesDto): Promise<Episode> {
         return this.RSSEpisodeRepository.createEpisode(CreateEpisodesDto)
-    }
-
-    async getMostRecentEpisode(): Promise<Episode> {
-        return await this.RSSEpisodeRepository.getMostRecentEpisode()
     }
 
     createPodcast(CreatePodcastDto: CreatePodcastDto): Promise<Podcast> {

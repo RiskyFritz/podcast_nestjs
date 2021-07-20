@@ -19,5 +19,8 @@ export class CreatePodcastDto {
 
   @IsNotEmpty()
   feed_url: string;
+
+  @IsNotEmpty()
+  last_build_date: string;
 }
 

@@ -17,4 +17,6 @@ export class Podcast {
   image_link: string;
   @Column()
   feed_url: string;
+  @Column()
+  last_build_date: string;
 }

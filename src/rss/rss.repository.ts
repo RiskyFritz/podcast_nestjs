@@ -1,45 +1,21 @@
 /* eslint-disable prettier/prettier */
 import { EntityRepository, Repository } from 'typeorm'
 import { CreateEpisodesDto } from './dto/create-episodes.dto'
-import { CreatePodcastDto } from 'src/podcast/dto/create-podcast.dto'
 import { Episode } from 'src/episode/episode.entity'
 import { Podcast } from 'src/podcast/podcast.entity'
 import { RSSUrl } from './rss.entity'
 import { CreateRSSUrlDto } from './dto/create-rss-url.dto'
+import { CreatePodcastDto } from './dto/create-podcast.dto'
 
 @EntityRepository(Episode)
 export class RSSEpisodeRepository extends Repository<Episode> {
     async createEpisode(
         createEpisodesDto: CreateEpisodesDto,
     ): Promise<Episode> {
-        const {
-            title,
-            description,
-            audioUrl,
-            pubDate,
-            duration,
-        } = createEpisodesDto
-
-        const episode = this.create({
-            title,
-            description,
-            audioUrl,
-            pubDate,
-            duration,
-        })
+        const episode = this.create(createEpisodesDto)
 
         await this.save(episode)
         return episode
-    }
-
-    async getMostRecentEpisode(): Promise<Episode> {
-        // get the most recently created episode
-        // the date will likely need to be put into the db as a date type so we can be confident in the return of this function
-        const query = await this.createQueryBuilder('episode').getOne()
-        if (query) {
-            return query
-        }
-        return null
     }
 }
 

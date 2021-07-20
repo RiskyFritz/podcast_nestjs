@@ -6,10 +6,13 @@ export class CreateEpisodesDto {
   title: string;
 
   @IsNotEmpty()
-  audioUrl: string;
+  audio_url: string;
 
   @IsNotEmpty()
-  pubDate: string;
+  pub_date: string;
+
+  @IsNotEmpty()
+  podcast_id: string;
 
   @IsOptional()
   duration: string;

@@ -10,9 +10,11 @@ export class Episode {
   @Column()
   description: string;
   @Column()
-  audioUrl: string;
+  audio_url: string;
   @Column()
-  pubDate: string;
+  pub_date: string;
   @Column()
   duration: string;
+  @Column()
+  podcast_id: string;
 }
