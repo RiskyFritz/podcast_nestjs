@@ -26,13 +26,15 @@ export class RSSController {
         const parse = async (url) => {
             console.log(`FEED URL: ${url}`)
             try {
+                /* TODO We will need to add a check for if all podcasts exist or not before checking for the build date */
+                // last build date
+                let lastBuildDate: string
                 // get rss json object from url
                 const feed = await parser.parseURL(url)
                 // get podcast by feed url
                 let podcast = await this.RSSService.getPodcastByFeedUrl(url)
                 // if podcast does not exist then create it
                 if (!podcast) {
-                    console.log(Object.keys(feed))
                     console.log(`CREATE NEW PODCAST: ${url}`)
                     const podcastObj = {
                         title: feed.title,
@@ -44,11 +46,12 @@ export class RSSController {
                         last_build_date: feed.lastBuildDate,
                     }
                     podcast = await this.RSSService.createPodcast(podcastObj)
+                } else {
+                    lastBuildDate = podcast.last_build_date
                 }
-                console.log(`PRE FILTER LENGTH: ${feed.items.length}`)
                 console.log(feed.feedUrl)
+                console.log(`PRE FILTER LENGTH: ${feed.items.length}`)
                 // get the most recent podcast episode
-                const lastBuildDate = podcast.last_build_date
                 // if the most recent episode exists filter out all episodes older than it
                 if (lastBuildDate) {
                     feed.items = feed.items.filter(

@@ -11,7 +11,7 @@ export class Episode {
   description: string;
   @Column()
   audio_url: string;
-  @Column()
+  @Column(({ type: 'date' }))
   pub_date: string;
   @Column()
   duration: string;
