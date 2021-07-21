@@ -1,5 +1,5 @@
 import { Body, Controller, Get, Param, Post, Query } from '@nestjs/common'
-import { PodcastService } from './podcast.service'
+import { GetEpisodesResult, PodcastService } from './podcast.service'
 import { Podcast } from './podcast.entity'
 import { GetPodcastFilterDto } from './dto/get-podcast-filter.dto'
 // import Parser from 'rss-parser';
@@ -14,8 +14,17 @@ export class PodcastController {
         return this.PodcastService.getPodcasts(filterDto)
     }
 
-    @Get('/:id')
-    getPodcastById(@Param('id') id: string): Promise<Podcast> {
-        return this.PodcastService.getPodcastById(id)
+    @Get('/:podcastId')
+    getPodcastById(
+        @Param('podcastId') podcastId: string,
+        @Query('hasPodcast') hasPodcast: string | boolean,
+        @Query('page') page: string | number,
+    ): Promise<GetEpisodesResult> {
+        // set types of parameters
+        hasPodcast = hasPodcast === 'true' || hasPodcast === true
+        page = Number(page) || 1
+
+        console.log({ podcastId, hasPodcast, page })
+        return this.PodcastService.getEpisodesFeed(podcastId, page, hasPodcast)
     }
 }
